@@ -1,10 +1,10 @@
 ---
 name: openclaw
-description: "Build and maintain the OpenClaw Dropscan CLI. Use when working with scanboxes, mailings, recipients, forwarding addresses, API actions, and output formatting in this repository."
-argument-hint: "Implement or update OpenClaw Dropscan CLI features"
+description: "Build and maintain the Dropscan CLI in this repository. Use when working with scanboxes, mailings, recipients, forwarding addresses, API actions, and output formatting."
+argument-hint: "Implement or update Dropscan CLI features"
 ---
 
-# OpenClaw Skill
+# Dropscan CLI Skill
 
 ## Purpose
 This skill implements and maintains a Python 3 CLI tool for Dropscan API v1.
@@ -38,6 +38,11 @@ Always route user-visible output through the global handler in [output.py](../..
 - `action`: scan, forward, destroy, cancel
 - `recipients`: list, show
 - `addresses`: register, show
+
+## Behavioral Notes
+- Wrapper script is `./dropscan-serv` and runs the CLI in the local virtual environment.
+- `scanbox info` prints recipients as a dedicated nested table for `txt`, `rich`, and `markdown` output formats.
+- API supports forwarding address registration and retrieval by ID; there is no endpoint to list all forwarding addresses.
 
 ## Implementation Checklist
 1. Confirm required endpoint exists in Dropscan API docs.

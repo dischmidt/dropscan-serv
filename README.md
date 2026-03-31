@@ -1,6 +1,6 @@
-# OpenClaw Dropscan CLI
+# Dropscan CLI
 
-OpenClaw is a Python 3 CLI for Dropscan API v1.
+Python 3 CLI for Dropscan API v1.
 
 ## Features
 - Select a scanbox and list mailings
@@ -47,7 +47,7 @@ python dropscan.py
 
 Recommended (uses the project virtual environment automatically):
 ```bash
-./openclaw
+./dropscan-serv
 ```
 
 Prompt:
@@ -72,6 +72,10 @@ action forward <uuid> --address-id <address_id> --date 2026-04-01
 - `scanbox list`
 - `scanbox select <scanbox_id>`
 - `scanbox info`
+
+`scanbox info` behavior:
+- In `txt`, `rich`, and `markdown` formats, recipients are rendered as a dedicated recipients table.
+- In `json` format, the full scanbox object is printed as JSON.
 
 ### Mailings
 - `mailings list [--status <status>] [--older-than <uuid>]`
@@ -104,6 +108,8 @@ Status values:
 ### Forwarding Addresses
 - `addresses register [options]`
 - `addresses show <address_id>`
+
+Note: the public API does not provide an endpoint to list all registered forwarding addresses.
 
 ## Notes
 - Email forwarding is not exposed as a dedicated endpoint in public Dropscan API v1.
