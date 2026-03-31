@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "OpenClaw: Install",
+      "type": "shell",
+      "command": "python -m pip install -r requirements.txt",
+      "group": "build"
+    },
+    {
+      "label": "OpenClaw: Run (rich)",
+      "type": "shell",
+      "command": "python dropscan.py"
+    },
+    {
+      "label": "OpenClaw: Run (JSON)",
+      "type": "shell",
+      "command": "FORMATTNG=json python dropscan.py"
+    },
+    {
+      "label": "OpenClaw: Run (markdown)",
+      "type": "shell",
+      "command": "FORMATTNG=markdown python dropscan.py"
+    },
+    {
+      "label": "OpenClaw: Run (txt)",
+      "type": "shell",
+      "command": "FORMATTNG=txt python dropscan.py"
+    }
+  ]
+}
