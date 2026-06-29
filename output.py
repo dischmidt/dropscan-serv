@@ -82,6 +82,13 @@ class OutputHandler:
         self.message(f"Saved file to: {target}")
         return str(target)
 
+    def save_text(self, text: str, path: str | None, default_name: str) -> str:
+        target = Path(path) if path else Path(default_name)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text)
+        self.message(f"Saved file to: {target}")
+        return str(target)
+
     @staticmethod
     def _stringify(value: Any) -> str:
         if value is None:

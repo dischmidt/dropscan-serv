@@ -41,10 +41,11 @@ def select_scanbox(ctx: click.Context, scanbox_id: int) -> None:
 
 
 @scanbox_group.command("info")
+@click.option("--scanbox", "scanbox_id", type=int, help="Override scanbox ID for this command.")
 @click.pass_context
-def scanbox_info(ctx: click.Context) -> None:
+def scanbox_info(ctx: click.Context, scanbox_id: int | None) -> None:
     app: AppContext = ctx.obj
-    scanbox_id = app.require_scanbox()
+    scanbox_id = app.resolve_scanbox(scanbox_id)
     scanboxes = app.client.get("/scanboxes")
     scanbox = next((sb for sb in scanboxes if sb.get("id") == scanbox_id), None)
     if not scanbox:

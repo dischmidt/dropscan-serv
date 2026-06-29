@@ -24,7 +24,18 @@ def cli(ctx: click.Context) -> None:
         raise click.ClickException("Missing DROPSCAN_API_KEY in environment.")
 
     base_url = os.getenv("DROPSCAN_API_BASE_URL", "https://api.dropscan.de/v1")
-    ctx.obj = AppContext(client=DropscanClient(api_key=api_key, base_url=base_url))
+    scanbox_raw = os.getenv("DROPSCAN_SCANBOX")
+    scanbox_id = None
+    if scanbox_raw:
+        try:
+            scanbox_id = int(scanbox_raw)
+        except ValueError as exc:
+            raise click.ClickException("Invalid DROPSCAN_SCANBOX. It must be an integer ID.") from exc
+
+    ctx.obj = AppContext(
+        client=DropscanClient(api_key=api_key, base_url=base_url),
+        scanbox_id=scanbox_id,
+    )
 
 
 cli.add_command(scanbox_group)

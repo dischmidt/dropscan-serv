@@ -11,10 +11,11 @@ def action_group() -> None:
 
 @action_group.command("scan", help="Request opening and scanning of a received mailing.")
 @click.argument("uuid", type=str)
+@click.option("--scanbox", "scanbox_id", type=int, help="Override scanbox ID for this command.")
 @click.pass_context
-def action_scan(ctx: click.Context, uuid: str) -> None:
+def action_scan(ctx: click.Context, uuid: str, scanbox_id: int | None) -> None:
     app: AppContext = ctx.obj
-    scanbox_id = app.require_scanbox()
+    scanbox_id = app.resolve_scanbox(scanbox_id)
     result = app.client.post(
         f"/scanboxes/{scanbox_id}/mailings/{uuid}/action_requests",
         payload={"action_type": "scan"},
@@ -27,12 +28,19 @@ def action_scan(ctx: click.Context, uuid: str) -> None:
     help="Request physical forwarding to a registered forwarding address.",
 )
 @click.argument("uuid", type=str)
+@click.option("--scanbox", "scanbox_id", type=int, help="Override scanbox ID for this command.")
 @click.option("--address-id", required=True, type=str)
 @click.option("--date", "forward_date", required=True, type=str, help="YYYY-MM-DD")
 @click.pass_context
-def action_forward(ctx: click.Context, uuid: str, address_id: str, forward_date: str) -> None:
+def action_forward(
+    ctx: click.Context,
+    uuid: str,
+    scanbox_id: int | None,
+    address_id: str,
+    forward_date: str,
+) -> None:
     app: AppContext = ctx.obj
-    scanbox_id = app.require_scanbox()
+    scanbox_id = app.resolve_scanbox(scanbox_id)
     result = app.client.post(
         f"/scanboxes/{scanbox_id}/mailings/{uuid}/action_requests",
         payload={
@@ -48,11 +56,12 @@ def action_forward(ctx: click.Context, uuid: str, address_id: str, forward_date:
 
 @action_group.command("destroy", help="Request permanent destruction of the physical mailing.")
 @click.argument("uuid", type=str)
+@click.option("--scanbox", "scanbox_id", type=int, help="Override scanbox ID for this command.")
 @click.option("--yes", is_flag=True, help="Skip confirmation prompt.")
 @click.pass_context
-def action_destroy(ctx: click.Context, uuid: str, yes: bool) -> None:
+def action_destroy(ctx: click.Context, uuid: str, scanbox_id: int | None, yes: bool) -> None:
     app: AppContext = ctx.obj
-    scanbox_id = app.require_scanbox()
+    scanbox_id = app.resolve_scanbox(scanbox_id)
     if not yes:
         click.confirm("Permanently destroy this mailing? This cannot be undone.", abort=True)
     result = app.client.post(
@@ -65,9 +74,10 @@ def action_destroy(ctx: click.Context, uuid: str, yes: bool) -> None:
 @action_group.command("cancel", help="Cancel a previously requested mailing action.")
 @click.argument("mailing_uuid", type=str)
 @click.argument("action_id", type=str)
+@click.option("--scanbox", "scanbox_id", type=int, help="Override scanbox ID for this command.")
 @click.pass_context
-def action_cancel(ctx: click.Context, mailing_uuid: str, action_id: str) -> None:
+def action_cancel(ctx: click.Context, mailing_uuid: str, action_id: str, scanbox_id: int | None) -> None:
     app: AppContext = ctx.obj
-    scanbox_id = app.require_scanbox()
+    scanbox_id = app.resolve_scanbox(scanbox_id)
     app.client.delete(f"/scanboxes/{scanbox_id}/mailings/{mailing_uuid}/action_requests/{action_id}")
     output.message("Action request cancelled.")

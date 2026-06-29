@@ -10,10 +10,11 @@ def recipients_group() -> None:
 
 
 @recipients_group.command("list")
+@click.option("--scanbox", "scanbox_id", type=int, help="Override scanbox ID for this command.")
 @click.pass_context
-def list_recipients(ctx: click.Context) -> None:
+def list_recipients(ctx: click.Context, scanbox_id: int | None) -> None:
     app: AppContext = ctx.obj
-    scanbox_id = app.require_scanbox()
+    scanbox_id = app.resolve_scanbox(scanbox_id)
     recipients = app.client.get(f"/scanboxes/{scanbox_id}/recipients")
     rows = []
     for recipient in recipients:
@@ -32,9 +33,10 @@ def list_recipients(ctx: click.Context) -> None:
 
 @recipients_group.command("show")
 @click.argument("recipient_id", type=str)
+@click.option("--scanbox", "scanbox_id", type=int, help="Override scanbox ID for this command.")
 @click.pass_context
-def show_recipient(ctx: click.Context, recipient_id: str) -> None:
+def show_recipient(ctx: click.Context, recipient_id: str, scanbox_id: int | None) -> None:
     app: AppContext = ctx.obj
-    scanbox_id = app.require_scanbox()
+    scanbox_id = app.resolve_scanbox(scanbox_id)
     recipient = app.client.get(f"/scanboxes/{scanbox_id}/recipients/{recipient_id}")
     output.detail(recipient)
